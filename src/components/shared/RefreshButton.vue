@@ -6,7 +6,7 @@
         <v-btn
           :text="$t('refresh')"
           variant="tonal"
-          prepend-icon="$refresh"
+          prepend-icon="mdi-refresh"
           :loading="loading"
           @click="handleRefresh"
         />

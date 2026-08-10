@@ -10,6 +10,8 @@ import App from "./App.vue";
 
 // Styles
 import "unfonts.css";
+import 'vuetify/styles'
+import "@/scss/style.scss";
 
 const app = createApp(App);
 

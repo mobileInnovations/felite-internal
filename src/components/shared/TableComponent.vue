@@ -147,7 +147,7 @@
       </template>
     </v-data-table-server>
     <v-btn
-      prepend-icon="$refresh"
+      prepend-icon="mdi-refresh"
       :text="$t('refresh')"
       variant="tonal"
       @click="$emit('fetch-data', startDate, endDate)"

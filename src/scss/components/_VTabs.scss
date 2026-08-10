@@ -1,0 +1,13 @@
+@use "../variables";
+
+.theme-tab {
+  &.v-tabs {
+    .v-tab {
+      border-radius: variables.$border-radius-root !important;
+      min-width: auto !important;
+      &.v-tab-item--selected {
+        background: rgb(var(--v-theme-primary));
+      }
+    }
+  }
+}
