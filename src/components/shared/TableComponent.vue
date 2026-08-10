@@ -3,7 +3,7 @@
   <v-card elevation="0">
     <v-row class="search-box">
       <v-col cols="12">
-        <h5>{{ $t("what_are_you_looking_for?") }}</h5>
+        <h5>{{ $t("what_are_you_looking_for") }}</h5>
       </v-col>
       <!-- Search bar -->
       <v-col v-if="canSearch">
@@ -217,7 +217,7 @@ const saveEdit = (item, key) => {
     "with value",
     item[key],
     "for task no",
-    item.taskNo
+    item.taskNo,
   );
   emit("update", item, key);
 };
@@ -247,13 +247,13 @@ const fetchTable = async ({ page, itemsPerPage, sortBy, items = [] }) => {
             ? bVal > aVal
               ? 1
               : bVal < aVal
-              ? -1
-              : 0
+                ? -1
+                : 0
             : aVal > bVal
-            ? 1
-            : aVal < bVal
-            ? -1
-            : 0;
+              ? 1
+              : aVal < bVal
+                ? -1
+                : 0;
         });
       }
       resolve({ items: items.slice(start, end), total: items.length });
@@ -273,8 +273,8 @@ const loadItems = async ({ page, itemsPerPage, sortBy }) => {
       const query = search.value.trim().toLowerCase();
       filteredItems = props.data.filter((d) =>
         Object.values(d).some((field) =>
-          String(field).toLowerCase().includes(query)
-        )
+          String(field).toLowerCase().includes(query),
+        ),
       );
     }
 
@@ -322,7 +322,7 @@ watch(
       itemsPerPage: itemsPerPage.value,
       sortBy: [],
     });
-  }, 300)
+  }, 300),
 );
 
 watch([startDate, endDate], () => {
@@ -365,7 +365,7 @@ watch(
       sortBy: [],
     });
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 

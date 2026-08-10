@@ -17,6 +17,7 @@
     "@mdi/js": "^7.4.47",
     "@tabler/icons-vue": "^3.46.0",
     "dayjs": "^1.11.21",
+    "lodash-es": "^4.18.1",
     "pinia": "^4.0.2",
     "sweetalert2": "^11.26.25",
     "vee-validate": "^4.15.1",

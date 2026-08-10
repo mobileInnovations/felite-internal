@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <!-- Show loading animation when loading -->
-    <div v-if="loading" class="d-flex align-center justify-center fill-height">
+    <div v-if="loading" class="app-bg">
       <v-card
         fluid
         variant="text"
@@ -33,7 +33,10 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.fill-height {
+.app-bg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 100vh;
 }
 </style>
