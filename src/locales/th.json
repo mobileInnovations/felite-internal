@@ -1,0 +1,22 @@
+{
+  "close": "ปิด",
+  "confirm": "ยืนยัน",
+  "what_are_you_looking_for": "คุณกำลังมองหาอะไรอยู่?",
+  "last_7_days": "7 วันที่ผ่านมา",
+  "all_notifications": "การแจ้งเตือนทั้งหมด",
+  "mark_all_as_read": "ทำเครื่องหมายว่าอ่านทั้งหมด",
+  "loading_notifications": "กำลังโหลดการแจ้งเตือน...",
+  "no_notifications": "ไม่มีการแจ้งเตือน",
+  "unread": "ยังไม่ได้อ่าน",
+  "good": "สวัสดี",
+  "view_all": "ดูทั้งหมด",
+  "clear_filters": "ล้างตัวกรอง",
+  "new": "ใหม่",
+  "no_notifications_found": "ไม่พบการแจ้งเตือน",
+  "try_adjusting_filters": "ลองปรับตัวกรอง",
+  "hi": "สวัสดี",
+  "welcome_back": "ยินดีต้อนรับกลับ",
+  "home_page": "หน้าหลัก",
+  "edit_profile": "แก้ไขโปรไฟล์",
+  "logout": "ออกจากระบบ"
+}

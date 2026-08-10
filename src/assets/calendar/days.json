@@ -1,0 +1,10 @@
+[
+    { "key": 0, "en": "Sunday", "th": "อาทิตย์" },
+    { "key": 1, "en": "Monday", "th": "จันทร์" },
+    { "key": 2, "en": "Tuesday", "th": "อังคาร" },
+    { "key": 3, "en": "Wednesday", "th": "พุธ" },
+    { "key": 4, "en": "Thursday", "th": "พฤหัสบดี" },
+    { "key": 5, "en": "Friday", "th": "ศุกร์" },
+    { "key": 6, "en": "Saturday", "th": "เสาร์" }
+  ]
+  
