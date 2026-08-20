@@ -23,5 +23,18 @@
   "refresh": "Refresh",
   "search": "Search",
   "start_date": "Start date",
-  "end_date": "End date"
+  "end_date": "End date",
+  "customer_name": "Customer name",
+  "serial_no": "Serial number",
+  "imei_number": "IMEI number",
+  "unique_id": "Unique ID",
+  "unit_name": "Unit name",
+  "vehicle_make": "Vehicle make",
+  "vehicle_model": "Vehicle model",
+  "license_plate": "License plate",
+  "equipment_type": "Equipment type",
+  "phone_number": "Phone number",
+  "last_position": "Last position",
+  "last_gps_time": "Last GPS time",
+  "actions": "Actions"
 }

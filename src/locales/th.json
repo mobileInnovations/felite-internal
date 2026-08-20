@@ -23,5 +23,18 @@
   "refresh": "รีเฟรช",
   "search": "ค้นหา",
   "start_date": "วันที่เริ่มต้น",
-  "end_date": "วันที่สิ้นสุด"
+  "end_date": "วันที่สิ้นสุด",
+  "customer_name": "ชื่อลูกค้า",
+  "serial_no": "หมายเลขซีเรียล",
+  "imei_number": "หมายเลข IMEI",
+  "unique_id": "ID ที่ไม่ซ้ำ",
+  "unit_name": "ชื่อหน่วย",
+  "vehicle_make": "ยี่ห้อรถ",
+  "vehicle_model": "รุ่นรถ",
+  "license_plate": "ป้ายทะเบียน",
+  "equipment_type": "ประเภทอุปกรณ์",
+  "phone_number": "หมายเลขโทรศัพท์",
+  "last_position": "ตำแหน่งล่าสุด",
+  "last_gps_time": "เวลา GPS ล่าสุด",
+  "actions": "การดำเนินการ"
 }

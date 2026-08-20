@@ -10,6 +10,7 @@ export const useAuthStore = defineStore("auth", {
   state: () => ({
     user: JSON.parse(localStorage.getItem("USER") || "null"),
     access_token: JSON.parse(localStorage.getItem("ACCESS_TOKEN") || "null"),
+    roles: JSON.parse(localStorage.getItem("ROLES") || "null"),
     returnUrl: null,
   }),
   actions: {
@@ -30,11 +31,14 @@ export const useAuthStore = defineStore("auth", {
         id: 1,
         username: username,
         access_token: "dummy_access_token",
+        roles: ["Admin"],
       };
       this.user = user;
       this.access_token = user.access_token;
+      this.roles = user.roles;
       localStorage.setItem("USER", JSON.stringify(user));
       localStorage.setItem("ACCESS_TOKEN", JSON.stringify(user.access_token));
+      localStorage.setItem("ROLES", JSON.stringify(user.roles));
 
       router.push("/");
     },
@@ -57,6 +61,7 @@ export const useAuthStore = defineStore("auth", {
       this.access_token = null;
       localStorage.removeItem("ACCESS_TOKEN");
       localStorage.removeItem("USER");
+      localStorage.removeItem("ROLES");
       router.replace("/auth/login");
 
       // Give Vue router a moment to finish before reload (optional delay)

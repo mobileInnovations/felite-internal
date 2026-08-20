@@ -2,18 +2,19 @@
   "name": "FElite internal",
   "private": true,
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
+    "prebuild": "node scripts/update-env.mjs",
+    "build": "cross-env SASS_LOG_WARNINGS=false vite build --mode production",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
     "@fontsource/roboto": "^5.2.10",
     "@jamescoyle/vue-icon": "^0.1.2",
-    "@mdi/font": "7.4.47",
+    "@mdi/font": "^7.4.47",
     "@mdi/js": "^7.4.47",
     "@tabler/icons-vue": "^3.46.0",
     "dayjs": "^1.11.21",

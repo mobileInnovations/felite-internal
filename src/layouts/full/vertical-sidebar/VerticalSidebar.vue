@@ -53,10 +53,15 @@ export default {
     temporary
   >
     <div class="ma-4 d-flex align-center flex-wrap">
-      <v-chip color="primary" variant="outlined" label size="small">
-        <v-icon icon="mdi-account" start /> {{ username }}
+      <v-chip
+        color="primary"
+        variant="outlined"
+        label
+        size="small"
+        prepend-icon="mdi-account-circle"
+      >
+        {{ username }}
       </v-chip>
-
       <v-spacer />
 
       <span class="text-subtitle-2 text-medium-emphasis"> is </span>

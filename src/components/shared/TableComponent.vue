@@ -16,47 +16,6 @@
         />
       </v-col>
     </v-row>
-
-    <v-row>
-      <!-- Search by Date -->
-      <v-col v-if="findByDate" cols="12" sm="3">
-        <DateInputComponent
-          :model-value="startDate"
-          :label="$t('start_date')"
-          type="startdate"
-          @update:model-value="startDate = $event"
-        />
-      </v-col>
-      <v-col v-if="findByDate" cols="12" sm="3">
-        <DateInputComponent
-          :model-value="endDate"
-          :label="$t('end_date')"
-          type="enddate"
-          @update:model-value="endDate = $event"
-        />
-      </v-col>
-
-      <v-divider v-if="findByDate" vertical />
-
-      <!-- Search by Month -->
-      <v-col v-if="findByMonth" cols="8">
-        <MonthSelected v-model="selectedMonth" />
-      </v-col>
-      <v-col v-if="findByMonth" cols="4">
-        <YearSelected v-model="selectedYear" />
-      </v-col>
-
-      <!-- Search by Month -->
-      <v-col v-if="findByMonth" cols="12">
-        <v-btn
-          variant="tonal"
-          :color="dataIsLast7days ? 'primary' : ''"
-          @click="fectLast7days"
-        >
-          {{ $t("last_7_days") }}
-        </v-btn>
-      </v-col>
-    </v-row>
   </v-card>
 
   <!-- Data table -->
@@ -160,10 +119,7 @@ import { ref, watch } from "vue";
 import { debounce } from "lodash-es";
 import dayjs from "dayjs";
 
-import DateInputComponent from "./DateInputComponent.vue";
 import DateTimeDisplay from "./DateTimeDisplay.vue";
-import MonthSelected from "./MonthSelected.vue";
-import YearSelected from "./YearSelected.vue";
 
 import {
   formatDurationFromMinutes,

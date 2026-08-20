@@ -1,6 +1,8 @@
 <script setup>
+import dayjs from "dayjs";
 const version = import.meta.env.VITE_VERSION;
 const lastUpdated = import.meta.env.VITE_LAST_UPDATED;
+const projectName = import.meta.env.VITE_PROJECT_NAME;
 </script>
 
 <template>
@@ -17,7 +19,7 @@ const lastUpdated = import.meta.env.VITE_LAST_UPDATED;
 
     <!-- Center section -->
     <div class="footer-center text-center my-1 my-sm-0">
-      <span class="font-weight-medium text-body-2">Activa</span>
+      <span class="font-weight-medium text-body-2">{{ projectName }}</span>
     </div>
 
     <!-- Right section -->
@@ -26,7 +28,7 @@ const lastUpdated = import.meta.env.VITE_LAST_UPDATED;
         v{{ version }}
       </v-chip>
       <span class="text-caption text-medium-emphasis">
-        last updated: {{ lastUpdated }}
+        last updated: {{ dayjs(lastUpdated).format('YYYY-MM-DD') }}
       </span>
     </div>
   </v-footer>

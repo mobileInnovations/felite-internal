@@ -117,7 +117,7 @@ const menuItems = computed(() => {
     .map((item) => {
       if (item.children) {
         const children = item.children.filter(
-          (c) => !c.permissions || c.permissions.some((p) => roles.includes(p))
+          (c) => !c.permissions || c.permissions.some((p) => roles.includes(p)),
         );
         return { ...item, children };
       }

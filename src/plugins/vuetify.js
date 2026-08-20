@@ -1,10 +1,13 @@
 import "vuetify/styles";
 import { createVuetify } from "vuetify";
 
-import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
-import { icons } from "./mdi-icon"; // Import icons from separate file
+import { aliases, mdi } from "vuetify/iconsets/mdi";
+import "@mdi/font/css/materialdesignicons.css";
+
+import { icons } from "./mdi-icon";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
+
 import { LightTheme } from "@/theme/LightTheme";
 import { en } from "vuetify/locale";
 

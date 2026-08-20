@@ -18,19 +18,15 @@ function getLang() {
 
 function getRole() {
   try {
-    const user = localStorage.getItem("USER");
-    const parsedUser = user ? JSON.parse(user) : null;
-
-    const roles = Array.isArray(parsedUser?.roles)
-      ? parsedUser.roles
-      : ["Guest"];
-
-    return roles;
+    if (!localStorage.getItem("ROLES")) {
+      console.warn("ROLES not found in localStorage, returning default role 'Guest'");
+      return ["Guest"];
+    }
+    return localStorage.getItem("ROLES");
   } catch (error) {
-    console.error("Error parsing localStorage USER:", error);
+    console.error("Error parsing localStorage ROLES:", error);
     return ["Guest"];
   }
 }
-
 
 export { getLocal, getLang, getRole };
