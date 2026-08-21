@@ -78,9 +78,17 @@ const handleLogin = async () => {
   try {
     loading.value = true;
 
-    await authStore.login(form.username, form.password);
+    const isLogin = await authStore.login(form.username, form.password);
 
-    router.push("/");
+    if (isLogin.success) {
+      router.push("/");
+    } else {
+      AlertComponent.error(
+        "Login failed",
+        isLogin.message || "Please check your username and password and try again.",
+      );
+    }
+
   } catch (error) {
     console.error(error);
     AlertComponent.error(

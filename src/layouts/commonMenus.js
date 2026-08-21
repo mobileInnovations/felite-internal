@@ -16,15 +16,15 @@ const labels = lang === "th" ? th : en;
 
 export const commonMenus = [
   {
-    title: labels.home_page,
-    icon: Home2Icon,
-    to: "/",
+    title: "FElite1.0",
+    icon: TooltipIcon,
+    to: "/FElite1.0",
     permissions: ["Admin"],
   },
   {
-    title: labels.tasks,
+    title: "FElite2.0",
     icon: TooltipIcon,
-    to: "/tasks",
+    to: "/FElite2.0",
     permissions: ["Admin"],
   },
 

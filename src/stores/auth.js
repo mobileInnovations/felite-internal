@@ -5,6 +5,23 @@ import { fetchWrapper } from "@/utils/helpers/fetch-wrapper";
 
 const baseUrl = `${import.meta.env.VITE_API_URL}/auth`;
 
+const USERS = [
+  {
+    username: "admin1",
+    password: "admin123",
+    name: "Administrator 1",
+    role: ["Admin"],
+    roles: ["Admin"],
+  },
+  {
+    username: "admin2",
+    password: "admin234",
+    name: "Administrator 2",
+    role: ["Admin"],
+    roles: ["Admin"],
+  },
+];
+
 export const useAuthStore = defineStore("auth", {
   id: "auth",
   state: () => ({
@@ -15,32 +32,37 @@ export const useAuthStore = defineStore("auth", {
   }),
   actions: {
     async login(username, password) {
-      // const user = await fetchWrapper.post(`${baseUrl}/login`, {
-      //   username,
-      //   password,
-      // });
-      // this.user = user;
-      // this.access_token = user.access_token;
-      // localStorage.setItem("USER", JSON.stringify(user));
-      // localStorage.setItem("ACCESS_TOKEN", JSON.stringify(user.access_token));
+      const user = USERS.find(
+        (item) => item.username === username && item.password === password,
+      );
 
-      // router.push("/");
+      if (!user) {
+        return {
+          success: false,
+          message: "Invalid username or password",
+        };
+      }
 
-      // Test login with hardcoded user data
-      const user = {
-        id: 1,
-        username: username,
-        access_token: "dummy_access_token",
-        roles: ["Admin"],
+      const userData = {
+        username: user.username,
+        name: user.name,
+        role: user.role,
       };
-      this.user = user;
-      this.access_token = user.access_token;
-      this.roles = user.roles;
-      localStorage.setItem("USER", JSON.stringify(user));
-      localStorage.setItem("ACCESS_TOKEN", JSON.stringify(user.access_token));
-      localStorage.setItem("ROLES", JSON.stringify(user.roles));
 
-      router.push("/");
+      // Generate a simple frontend token
+      const access_token = btoa(`${user.username}:${Date.now()}`);
+
+      this.user = userData;
+      this.access_token = access_token;
+
+      localStorage.setItem("USER", JSON.stringify(userData));
+      localStorage.setItem("ACCESS_TOKEN", JSON.stringify(access_token));
+      localStorage.setItem("ROLES", JSON.stringify(user.role));
+
+      return {
+        success: true,
+        user: userData,
+      };
     },
 
     async changepassword({ currentPassword, newPassword }) {

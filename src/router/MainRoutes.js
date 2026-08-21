@@ -1,9 +1,9 @@
 const MainRoutes = {
-  path: "/main",
+  path: "/",
   meta: {
     requiresAuth: true,
   },
-  redirect: "/main/dashboard/default",
+  redirect: "/dashboard/default",
   component: () => import("@/layouts/full/FullLayout.vue"),
   children: [
     {
@@ -13,12 +13,12 @@ const MainRoutes = {
     },
     {
       name:"FElite1.0",
-      path:"/main/FElite1.0",
+      path:"/FElite1.0",
       component: () => import("@/views/FElite1.0.vue"),
     },
     {
       name:"FElite2.0",
-      path:"/main/FElite2.0",
+      path:"/FElite2.0",
       component: () => import("@/views/FElite2.0.vue"),
     }
   ],

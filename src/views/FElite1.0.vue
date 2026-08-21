@@ -33,7 +33,6 @@ const headers = ref([
   { title: t("phone_number"), key: "phoneNumber" },
   { title: t("last_position"), key: "lastPosition" },
   { title: t("last_gps_time"), key: "lastGpsTime" },
-  { title: t("actions"), key: "actions", sortable: false },
 ]);
 </script>
 
