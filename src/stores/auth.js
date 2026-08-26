@@ -10,14 +10,12 @@ const USERS = [
     username: "admin1",
     password: "admin123",
     name: "Administrator 1",
-    role: ["Admin"],
     roles: ["Admin"],
   },
   {
     username: "admin2",
     password: "admin234",
     name: "Administrator 2",
-    role: ["Admin"],
     roles: ["Admin"],
   },
 ];
@@ -46,7 +44,7 @@ export const useAuthStore = defineStore("auth", {
       const userData = {
         username: user.username,
         name: user.name,
-        role: user.role,
+        roles: user.roles,
       };
 
       // Generate a simple frontend token
@@ -57,7 +55,7 @@ export const useAuthStore = defineStore("auth", {
 
       localStorage.setItem("USER", JSON.stringify(userData));
       localStorage.setItem("ACCESS_TOKEN", JSON.stringify(access_token));
-      localStorage.setItem("ROLES", JSON.stringify(user.role));
+      localStorage.setItem("ROLES", JSON.stringify(user.roles));
 
       return {
         success: true,
