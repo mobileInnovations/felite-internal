@@ -139,14 +139,15 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  findByDate: {
-    type: Boolean,
-    default: true,
-  },
-  findByMonth: {
+  loading: {
     type: Boolean,
     default: false,
   },
+  error: {
+    type: Boolean,
+    default: false,
+  },
+
 });
 
 const emit = defineEmits(["fetch-data", "update"]);

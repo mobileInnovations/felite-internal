@@ -2,22 +2,41 @@
   <BaseBreadcrumb :title="page.title" :breadcrumbs="breadcrumbs" />
 
   <v-card class="pa-9" elevation="0">
-    <TableComponent :headers="headers" :data="mockData" />
+    <TableComponent
+      :headers="headers"
+      :data="units"
+      :loading="loading"
+      :error="error"
+    />
   </v-card>
 </template>
 
 <script setup>
-import { ref, shallowRef } from "vue";
+import { ref, shallowRef, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
+import { storeToRefs } from "pinia";
 
 import TableComponent from "@/components/shared/TableComponent.vue";
 import BaseBreadcrumb from "@/components/shared/BaseBreadcrumb.vue";
-import mockData from "@/demo/data.json";
+import { useFELiteStore } from "@/stores/felite";
+
+const store = useFELiteStore();
+
+console.log("FELite store:", store);
+console.log("loadData:", store.loadData);
+
+const { units, loading, error } = storeToRefs(store);
 
 const { t } = useI18n();
 
 const page = ref({ title: t("home_page") });
-const breadcrumbs = shallowRef([{ title: t("home_page"), disabled: true }]);
+
+const breadcrumbs = shallowRef([
+  {
+    title: t("home_page"),
+    disabled: true,
+  },
+]);
 
 const headers = ref([
   { title: "No", key: "no" },
@@ -34,6 +53,8 @@ const headers = ref([
   { title: t("last_position"), key: "lastPosition" },
   { title: t("last_gps_time"), key: "lastGpsTime" },
 ]);
-</script>
 
-<style scoped lang="scss"></style>
+onMounted(async () => {
+  await store.loadData();
+});
+</script>
