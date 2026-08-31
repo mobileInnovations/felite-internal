@@ -4,6 +4,11 @@ import { fetchWrapper } from "@/utils/helpers/fetch-wrapper";
 
 const apiBaseUrl = "/wialon-api/wialon/ajax.html";
 
+const WIALON_TOKENS = {
+  1: "c197490d6d60f1233383fb59a0888d6859E5F07D9AE5AA3BB9BA7EF39EEE9E75CDAD7147",
+  2: "f5d4418e904326f1341d2fc4ef777eeeC684DD6223DB4F3FE18329DA391560563C12A160",
+};
+
 export const useFELiteStore = defineStore("felite", () => {
   const eid = ref("");
   const units = ref([]);
@@ -116,16 +121,34 @@ export const useFELiteStore = defineStore("felite", () => {
     }
   }
 
+  async function getEid(version) {
+    try {
+      const token = WIALON_TOKENS[version];
+      if (!token) {
+        throw new Error(`Invalid Wialon version: ${version}`);
+      }
+      const params = encodeURIComponent(JSON.stringify({ token }));
+      const url = `${apiBaseUrl}?svc=token/login&params=${params}`;
+      const response = await fetchWrapper.get(url);
+      console.log("getEid response:", response);
+      return response.eid;
+    } catch (error) {
+      console.error("getEid error:", error);
+      throw error;
+    }
+  }
+
   // ==============================
   // Load All Data
   // ==============================
-  async function loadData() {
+  async function loadData(version) {
+    console.log("loadData called with version:", version);
     loading.value = true;
     error.value = null;
 
     try {
       // ต้องมี getEid() อยู่ใน store เดียวกัน
-      const sessionId = await getEid("2.0");
+      const sessionId = await getEid(version); // Assuming getEid is defined elsewhere in the store
 
       if (!sessionId) {
         throw new Error("Cannot get Wialon session ID");

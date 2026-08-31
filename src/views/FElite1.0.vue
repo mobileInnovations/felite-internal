@@ -55,6 +55,6 @@ const headers = ref([
 ]);
 
 onMounted(async () => {
-  await store.loadData();
+  await store.loadData("1.0");
 });
 </script>
