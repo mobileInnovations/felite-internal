@@ -1,21 +1,17 @@
 <script>
 import { defineComponent, shallowRef, nextTick, ref, onUnmounted } from "vue";
 import { SettingsIcon, Menu2Icon } from "vue-tabler-icons";
-import { useCustomizerStore } from "../../../stores/customizer";
-import { languages } from "@/utils/languages";
 import router from "@/router";
+import { useCustomizerStore } from "@/stores/customizer";
+import { languages } from "@/utils/languages";
 import { getLang } from "@/utils/getStorage";
 
 // dropdown imports
 import ProfileDD from "./ProfileDD.vue";
-// import NotificationDD from "./NotificationDD.vue";
 import sidebarItems from "./sidebarItem";
 
-// import { useAuthStore } from "@/stores/auth";
-// import { useNotificationStore } from "@/stores/notification.js";
-
 import SvgIcon from "@jamescoyle/vue-icon";
-import { mdiBell, mdiTranslateVariant } from "@mdi/js";
+import { mdiTranslateVariant } from "@mdi/js";
 import dayjs from "dayjs";
 
 export default defineComponent({
@@ -28,43 +24,11 @@ export default defineComponent({
   },
 
   data() {
-    // const authStore = useAuthStore();
-    // const notificationStore = useNotificationStore();
-    const notificationCount = ref(0);
-
-    // const userId = computed(() => authStore.user?.id);
-
-    const notifications = ref([]);
-
     const currentLang = getLang();
-
-    // Fetch notifications function
-    // const fetchNotifications = async () => {
-    //   try {
-    //     const { data } = await notificationStore.getMessage({
-    //       userId: userId.value,
-    //       startDate: dayjs().subtract(30, "day").format("YYYY-MM-DD"),
-    //       endDate: dayjs().format("YYYY-MM-DD"),
-    //     });
-
-    //     const filterNotificationsUnread = data?.filter(
-    //       (notification) => notification.is_read === false
-    //     );
-    //     notifications.value = data;
-    //     notificationCount.value = filterNotificationsUnread?.length;
-    //   } catch (err) {
-    //     console.error(err);
-    //   }
-    // };
 
     const sidebarMenu = shallowRef(sidebarItems);
 
     let intervalId = null;
-
-    // onMounted(async () => {
-    //   await fetchNotifications();
-    //   intervalId = setInterval(fetchNotifications, 60000); // every 60 seconds
-    // });
 
     onUnmounted(() => {
       clearInterval(intervalId);
@@ -76,11 +40,7 @@ export default defineComponent({
       model: 0,
       languages: languages,
       mdiTranslateVariant: mdiTranslateVariant,
-      mdiBell: mdiBell,
-      notificationCount,
       sidebarMenu,
-      notifications,
-      // fetchNotifications,
     };
   },
 
@@ -152,56 +112,29 @@ export default defineComponent({
 
       <!-- Case: No children -->
       <v-btn
-        v-else
+        v-else-if="item.title"
         class="hidden-md-and-down ms-3"
-        variant="outlined"
+        variant="tonal"
         :append-icon="item.icon"
         @click="clickTo(item.to)"
       >
         {{ item.title }}
       </v-btn>
+
+      <!-- Case is Homepage -->
+      <v-btn
+        v-if="!item.title"
+        class="hidden-md-and-down ms-3"
+        variant="tonal"
+        :append-icon="item.icon"
+        @click="clickTo(item.to)"
+      >
+        home
+      </v-btn>
     </template>
 
     <v-spacer />
 
-    <!-- ---------------------------------------------- -->
-    <!-- Notification -->
-    <!-- ---------------------------------------------- -->
-
-    <v-menu transition="slide-y-transition">
-      <template v-slot:activator="{ props }">
-        <v-btn
-          size="small"
-          icon
-          rounded="sm"
-          variant="text"
-          v-bind="props"
-          stacked
-        >
-          <template v-if="notificationCount > 0">
-            <v-badge
-              color="error"
-              :content="notificationCount"
-              offset-x="4"
-              offset-y="4"
-            >
-              <svg-icon type="mdi" :path="mdiBell" />
-            </v-badge>
-          </template>
-          <template v-else>
-            <svg-icon type="mdi" :path="mdiBell" />
-          </template>
-        </v-btn>
-      </template>
-
-      <!-- <v-sheet rounded="md" class="elevation-10">
-        <NotificationDD
-          :notifications="notifications"
-          :current-lang="currentLang"
-          @fect-noti="fetchNotifications"
-        />
-      </v-sheet> -->
-    </v-menu>
     <!-- ---------------------------------------------- -->
     <!-- Language -->
     <!-- ---------------------------------------------- -->

@@ -1,72 +1,56 @@
 <template>
   <BaseBreadcrumb :title="page.title" :breadcrumbs="breadcrumbs" />
-
-  <v-card class="pa-9"> 
-    <TableComponent/>
+  <v-card class="pa-9" elevation="0">
+    <TableComponent
+      :headers="headers"
+      :data="mergeData"
+      :loading="loading"
+      :error="error"
+    />
   </v-card>
 </template>
 
 <script setup>
-import { ref, nextTick, shallowRef, computed } from "vue";
+import { ref, shallowRef, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import router from "@/router";
+import { storeToRefs } from "pinia";
 
 import TableComponent from "@/components/shared/TableComponent.vue";
 import BaseBreadcrumb from "@/components/shared/BaseBreadcrumb.vue";
-import sidebarItems from "@/layouts/full/vertical-sidebar/sidebarItem";
-import { useAuthStore } from "@/stores/auth";
+import { useFELiteStore } from "@/stores/felite";
+
+const store = useFELiteStore();
+
+const { mergeData, loading, error } = storeToRefs(store);
 
 const { t } = useI18n();
-const authStore = useAuthStore();
 
-// MULTIPLE ROLES
-const roles = authStore?.user?.roles ?? ["Guest"];
-const username = authStore?.user?.username ?? "Guest";
+const page = ref({ title: "FElite 2.0" });
 
-const page = ref({ title: t("home_page") });
-const breadcrumbs = shallowRef([{ title: t("home_page"), disabled: true }]);
+const breadcrumbs = shallowRef([
+  {
+    title: page.value.title,
+    disabled: true,
+  },
+]);
 
-const expanded = ref({});
+const headers = ref([
+  { title: "No", key: "no" },
+  { title: t("customer_name"), key: "customerName" },
+  { title: t("serial_no"), key: "serialNo" },
+  { title: t("imei_number"), key: "imeiNumber" },
+  { title: t("unique_id"), key: "uid" },
+  { title: t("unit_name"), key: "unitName" },
+  { title: t("vehicle_make"), key: "vehicleMake" },
+  { title: t("vehicle_model"), key: "vehicleModel" },
+  { title: t("license_plate"), key: "licensePlate" },
+  { title: t("equipment_type"), key: "equipmentType" },
+  { title: t("phone_number"), key: "phoneNumber" },
+  { title: t("last_position"), key: "lastPosition" },
+  { title: t("last_gps_time"), key: "lastGpsTime" },
+]);
 
-const toggleExpand = (idx) => {
-  expanded.value[idx] = !expanded.value[idx];
-};
-
-// FILTER MENUS BASED ON MULTIPLE ROLES
-const menuItems = computed(() => {
-  return sidebarItems
-    .filter((item) => {
-      // Check parent permissions
-      if (
-        item.permissions &&
-        !item.permissions.some((p) => roles.includes(p))
-      ) {
-        return false;
-      }
-      if (!item.title) return false;
-      if (item.title === "Home Page") return false;
-      return true;
-    })
-    .map((item) => {
-      if (item.children) {
-        const children = item.children.filter(
-          (c) => !c.permissions || c.permissions.some((p) => roles.includes(p)),
-        );
-        return { ...item, children };
-      }
-      return item;
-    });
+onMounted(async () => {
+  await store.loadData(2);
 });
-
-// navigation
-const clickTo = (path) => {
-  nextTick(() => {
-    router
-      .push(path || "/")
-      .then(() => console.log("Navigation done!"))
-      .catch((err) => console.warn("Navigation error:", err));
-  });
-};
 </script>
-
-<style scoped lang="scss"></style>

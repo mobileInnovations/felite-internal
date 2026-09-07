@@ -32,10 +32,28 @@
       fixed-footer
       @update:options="loadItems"
     >
+      <template #no-data>
+        <div class="no-data-container">
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <Vue3Lottie
+              :animation-data="noDataAnimation"
+              loop
+              autoplay
+              :height="120"
+              :width="120"
+              style="flex-shrink: 0; margin: 0 !important; display: block"
+            />
+            <p style="font-size: 15px; font-weight: 500; margin: 0">
+              No data available
+            </p>
+          </div>
+        </div>
+      </template>
+
       <template
         v-for="header in headers"
         :key="header.key"
-        v-slot:[`item.${header.key}`]="{ item }"
+        v-slot:[`item.${header.key}`]="{ item, index }"
       >
         <template v-if="header.editable">
           <v-text-field
@@ -46,12 +64,20 @@
             @keyup.enter.exact="saveEdit(item, header.key)"
           />
         </template>
+
         <template v-else-if="header.highlight">
-          <v-chip color="primary" label> {{ item[header.key] }} </v-chip>
+          <v-chip color="primary" label>
+            {{ item[header.key] }}
+          </v-chip>
         </template>
 
         <template v-else-if="header.key === 'action'">
           <v-btn density="compact" variant="text" icon="$circleEditOutline" />
+        </template>
+
+        <!-- Running Number -->
+        <template v-else-if="header.key === 'no'">
+          {{ (currentPage - 1) * itemsPerPage + index + 1 }}
         </template>
 
         <template v-else-if="!item[header.key]"> - </template>
@@ -59,9 +85,9 @@
         <template v-else-if="header.isTime">
           <div class="d-flex align-center mt-1">
             <v-icon icon="$clockOutline" size="12" class="me-1 text-primary" />
-            <span class="text-caption">{{
-              dayjs(item[header.key]).format("HH:mm:ss")
-            }}</span>
+            <span class="text-caption">
+              {{ dayjs(item[header.key]).format("HH:mm:ss") }}
+            </span>
           </div>
         </template>
 
@@ -69,23 +95,20 @@
           <DateTimeDisplay :value="item[header.key]" />
         </template>
 
-        <!-- Duration Colum -->
         <template v-else-if="header.duration">
           <span v-if="item[header.key] === '-'">-</span>
-          <span v-else class="timer">{{
-            formatDurationFromMinutes(item[header.key])
-          }}</span>
+          <span v-else class="timer">
+            {{ formatDurationFromMinutes(item[header.key]) }}
+          </span>
         </template>
 
-        <!-- Duration Colum -->
         <template v-else-if="header.durationhr">
           <span v-if="item[header.key] === '-'">-</span>
-          <span v-else class="timer">{{
-            formatDurationFromHours(item[header.key])
-          }}</span>
+          <span v-else class="timer">
+            {{ formatDurationFromHours(item[header.key]) }}
+          </span>
         </template>
 
-        <!-- Number Colum -->
         <template
           v-else-if="
             typeof item[header.key] === 'number' && !isNaN(item[header.key])
@@ -94,7 +117,6 @@
           {{ item[header.key].toLocaleString() }}
         </template>
 
-        <!-- Default Column -->
         <template v-else>
           <span v-if="item[header.key] === 'null' || !item[header.key]">
             -
@@ -120,6 +142,7 @@ import { debounce } from "lodash-es";
 import dayjs from "dayjs";
 
 import DateTimeDisplay from "./DateTimeDisplay.vue";
+import noDataAnimation from "@/assets/animations/no-data.json";
 
 import {
   formatDurationFromMinutes,
@@ -147,7 +170,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-
 });
 
 const emit = defineEmits(["fetch-data", "update"]);
@@ -159,7 +181,7 @@ const selectedMonth = ref(new Date().getMonth() + 1);
 const selectedYear = ref(new Date().getFullYear());
 
 const serverItems = ref([]);
-const loading = ref(false);
+const loading = ref(true);
 const dataIsLast7days = ref(false);
 const search = ref("");
 
@@ -182,39 +204,39 @@ const saveEdit = (item, key) => {
 const fetchTable = async ({ page, itemsPerPage, sortBy, items = [] }) => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const start = (page - 1) * itemsPerPage;
-      const end = start + itemsPerPage;
+      // ✅ ไม่แก้ props.data โดยตรง
+      let sortedItems = [...items];
 
-      if (sortBy.length) {
+      if (sortBy?.length) {
         const { key: sortKey, order } = sortBy[0];
-        items.sort((a, b) => {
+
+        sortedItems.sort((a, b) => {
           const aVal = a[sortKey];
           const bVal = b[sortKey];
 
-          if (aVal == null) return 1;
-          if (bVal == null) return -1;
+          if (aVal == null || aVal === "") return 1;
+          if (bVal == null || bVal === "") return -1;
 
-          if (typeof aVal === "string" && typeof bVal === "string") {
-            return order === "desc"
-              ? bVal.localeCompare(aVal)
-              : aVal.localeCompare(bVal);
-          }
+          const aString = String(aVal);
+          const bString = String(bVal);
 
-          return order === "desc"
-            ? bVal > aVal
-              ? 1
-              : bVal < aVal
-                ? -1
-                : 0
-            : aVal > bVal
-              ? 1
-              : aVal < bVal
-                ? -1
-                : 0;
+          const result = aString.localeCompare(bString, undefined, {
+            numeric: true,
+            sensitivity: "base",
+          });
+
+          return order === "desc" ? -result : result;
         });
       }
-      resolve({ items: items.slice(start, end), total: items.length });
-    }, 500);
+
+      const start = (page - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+
+      resolve({
+        items: sortedItems.slice(start, end),
+        total: sortedItems.length,
+      });
+    }, 0);
   });
 };
 
@@ -224,11 +246,12 @@ const loadItems = async ({ page, itemsPerPage, sortBy }) => {
   currentPage.value = page;
 
   try {
-    let filteredItems = props.data;
+    let filteredItems = [...props.data];
 
     if (search.value.trim()) {
       const query = search.value.trim().toLowerCase();
-      filteredItems = props.data.filter((d) =>
+
+      filteredItems = filteredItems.filter((d) =>
         Object.values(d).some((field) =>
           String(field).toLowerCase().includes(query),
         ),
@@ -262,12 +285,6 @@ const isDateLike = (value) => {
     typeof value === "string" &&
     formats.some((format) => dayjs(value, format, true).isValid())
   );
-};
-
-const fectLast7days = () => {
-  dataIsLast7days.value = true;
-  endDate.value = dayjs(); // today
-  startDate.value = dayjs().subtract(6, "day");
 };
 
 watch(
@@ -357,5 +374,14 @@ watch(
 .search-box {
   border-radius: 12px;
   background-color: white;
+}
+
+.no-data-container {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: left;
+  padding: 40px 20px;
+  text-align: left;
 }
 </style>

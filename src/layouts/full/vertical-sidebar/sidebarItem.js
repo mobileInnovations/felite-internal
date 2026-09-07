@@ -9,22 +9,19 @@ const userPermissions = role || []; // Assuming `permissions` is an array in use
 const lang = localStorage.getItem("LANG") || "th";
 localStorage.setItem("LANG", lang); // Set default language if not present
 
-console.log("commonMenus =>", commonMenus);
 // Function to generate menus based on role and permissions
 function createMenu() {
   const menus = [];
 
   function checkPermissions(menuItem) {
-    console.log("menuItem =>", menuItem);
-    console.log("userPermissions =>", userPermissions);
     if (
       menuItem.permissions?.some((permission) =>
-        userPermissions.includes(permission)
+        userPermissions.includes(permission),
       )
     ) {
       if (menuItem.children && menuItem.children.length > 0) {
         menuItem.children = menuItem.children.filter((child) =>
-          checkPermissions(child)
+          checkPermissions(child),
         );
       }
       return true;
@@ -51,7 +48,7 @@ function addMenuItems(menuItems) {
   menuItems.forEach((item) => {
     if (
       item.permissions?.some((permission) =>
-        userPermissions.includes(permission)
+        userPermissions.includes(permission),
       )
     ) {
       sidebarItem.push(item);

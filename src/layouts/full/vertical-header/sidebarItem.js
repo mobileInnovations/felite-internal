@@ -1,35 +1,58 @@
 import { commonMenus } from "@/layouts/commonMenus";
+
 import { getRole } from "@/utils/getStorage";
 
-const userPermissions = Array.isArray(getRole()) ? getRole() : ["Guest"];
+const role = getRole();
+const userPermissions = role || []; // Assuming `permissions` is an array in user object
 
+// Select language labels (default to 'th' if not set)
+const lang = localStorage.getItem("LANG") || "th";
+localStorage.setItem("LANG", lang); // Set default language if not present
+
+// Function to generate menus based on role and permissions
 function createMenu() {
-  function filterMenu(menuItem) {
-    const allowed = menuItem.permissions?.some((permission) =>
-      userPermissions.includes(permission)
-    );
+  const menus = [];
 
-    if (!allowed) return null;
-
-    const newItem = { ...menuItem };
-
-    if (Array.isArray(menuItem.children) && menuItem.children.length > 0) {
-      newItem.children = menuItem.children
-        .map((child) => filterMenu(child))
-        .filter(Boolean);
+  function checkPermissions(menuItem) {
+    if (
+      menuItem.permissions?.some((permission) =>
+        userPermissions.includes(permission),
+      )
+    ) {
+      if (menuItem.children && menuItem.children.length > 0) {
+        menuItem.children = menuItem.children.filter((child) =>
+          checkPermissions(child),
+        );
+      }
+      return true;
     }
-
-    return newItem;
+    return false;
   }
 
-  return commonMenus.map((menu) => filterMenu(menu)).filter(Boolean);
+  commonMenus.forEach((item) => {
+    if (checkPermissions(item)) {
+      menus.push(item);
+    }
+  });
+
+  return menus;
 }
 
-const sidebarItem = [];
+// Sidebar header
+const sidebarHeader = lang === "th" ? { header: "หน้า" } : { header: "Pages" };
+
+// Sidebar items container
+const sidebarItem = [sidebarHeader];
 
 function addMenuItems(menuItems) {
   menuItems.forEach((item) => {
-    sidebarItem.push(item);
+    if (
+      item.permissions?.some((permission) =>
+        userPermissions.includes(permission),
+      )
+    ) {
+      sidebarItem.push(item);
+    }
   });
 }
 

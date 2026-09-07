@@ -1,15 +1,15 @@
 <script setup>
-import Icon from '../IconSet.vue';
+import Icon from "../IconSet.vue";
 
 const props = defineProps({
   item: {
     type: Object,
-    default: () => ({})
+    default: () => ({}),
   },
   level: {
     type: Number,
-    default: 0
-  }
+    default: 0,
+  },
 });
 </script>
 
@@ -30,10 +30,14 @@ const props = defineProps({
     </template>
     <v-list-item-title>{{ item.title }}</v-list-item-title>
     <!---If Caption-->
-    <v-list-item-subtitle v-if="item.subCaption" class="text-caption mt-n1 hide-menu">
+    <v-list-item-subtitle
+      v-if="item.subCaption"
+      class="text-caption mt-n1 hide-menu"
+    >
       {{ item.subCaption }}
     </v-list-item-subtitle>
     <!---If any chip or label-->
+
     <template v-if="item.chip" v-slot:append>
       <v-chip
         :color="item.chipColor"

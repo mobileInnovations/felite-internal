@@ -1,13 +1,9 @@
 <template>
   <BaseBreadcrumb :title="page.title" :breadcrumbs="breadcrumbs" />
-
   <v-card class="pa-9" elevation="0">
-    <TableComponent
-      :headers="headers"
-      :data="units"
-      :loading="loading"
-      :error="error"
-    />
+    <v-data-table :items="units"></v-data-table>
+    <v-data-table :items="customers"></v-data-table>
+    <v-data-table :items="types"></v-data-table>
   </v-card>
 </template>
 
@@ -22,18 +18,15 @@ import { useFELiteStore } from "@/stores/felite";
 
 const store = useFELiteStore();
 
-console.log("FELite store:", store);
-console.log("loadData:", store.loadData);
-
-const { units, loading, error } = storeToRefs(store);
+const { units, customers, types, loading, error } = storeToRefs(store);
 
 const { t } = useI18n();
 
-const page = ref({ title: t("home_page") });
+const page = ref({ title: "FElite 1.0" });
 
 const breadcrumbs = shallowRef([
   {
-    title: t("home_page"),
+    title: page.value.title,
     disabled: true,
   },
 ]);
@@ -43,7 +36,7 @@ const headers = ref([
   { title: t("customer_name"), key: "customerName" },
   { title: t("serial_no"), key: "serialNo" },
   { title: t("imei_number"), key: "imeiNumber" },
-  { title: t("unique_id"), key: "uniqueId" },
+  { title: t("unique_id"), key: "uid" },
   { title: t("unit_name"), key: "unitName" },
   { title: t("vehicle_make"), key: "vehicleMake" },
   { title: t("vehicle_model"), key: "vehicleModel" },
@@ -55,6 +48,6 @@ const headers = ref([
 ]);
 
 onMounted(async () => {
-  await store.loadData("1.0");
+  await store.loadData(2);
 });
 </script>

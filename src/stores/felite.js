@@ -1,6 +1,7 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 import { fetchWrapper } from "@/utils/helpers/fetch-wrapper";
+import dayjs from "dayjs";
 
 const apiBaseUrl = "/wialon-api/wialon/ajax.html";
 
@@ -11,16 +12,18 @@ const WIALON_TOKENS = {
 
 export const useFELiteStore = defineStore("felite", () => {
   const eid = ref("");
+
   const units = ref([]);
   const types = ref([]);
   const customers = ref([]);
+
+  const mergeData = ref([]);
 
   const loading = ref(false);
   const error = ref(null);
 
   // ==============================
   // Get All Hardware Types
-  // PHP: getAllType($eid)
   // ==============================
   async function getAllType(sessionId) {
     try {
@@ -37,20 +40,18 @@ export const useFELiteStore = defineStore("felite", () => {
         )}`,
       );
 
-      types.value = response;
+      types.value = response || [];
 
-      return response;
+      return types.value;
     } catch (err) {
       console.error("getAllType error:", err);
       error.value = err.message || err;
-
-      return null;
+      return [];
     }
   }
 
   // ==============================
   // Get Units
-  // PHP: getUnits($eid)
   // ==============================
   async function getUnits(sessionId) {
     try {
@@ -80,14 +81,12 @@ export const useFELiteStore = defineStore("felite", () => {
     } catch (err) {
       console.error("getUnits error:", err);
       error.value = err.message || err;
-
-      return null;
+      return [];
     }
   }
 
   // ==============================
   // Get Customers
-  // PHP: getCustomers($eid)
   // ==============================
   async function getCustomers(sessionId) {
     try {
@@ -116,25 +115,37 @@ export const useFELiteStore = defineStore("felite", () => {
     } catch (err) {
       console.error("getCustomers error:", err);
       error.value = err.message || err;
-
-      return null;
+      return [];
     }
   }
 
+  // ==============================
+  // Get Eid
+  // ==============================
   async function getEid(version) {
     try {
       const token = WIALON_TOKENS[version];
-      if (!token) {
-        throw new Error(`Invalid Wialon version: ${version}`);
+
+      if (version !== 1 && version !== 2) {
+        throw new Error(
+          `Version ${version} is not supported. Please use version 1 or 2.`,
+        );
       }
+
+      if (!token) {
+        throw new Error(`No token found for version ${version}.`);
+      }
+
       const params = encodeURIComponent(JSON.stringify({ token }));
+
       const url = `${apiBaseUrl}?svc=token/login&params=${params}`;
+
       const response = await fetchWrapper.get(url);
-      console.log("getEid response:", response);
+
       return response.eid;
-    } catch (error) {
-      console.error("getEid error:", error);
-      throw error;
+    } catch (err) {
+      console.error("getEid error:", err);
+      throw err;
     }
   }
 
@@ -142,13 +153,11 @@ export const useFELiteStore = defineStore("felite", () => {
   // Load All Data
   // ==============================
   async function loadData(version) {
-    console.log("loadData called with version:", version);
     loading.value = true;
     error.value = null;
 
     try {
-      // ต้องมี getEid() อยู่ใน store เดียวกัน
-      const sessionId = await getEid(version); // Assuming getEid is defined elsewhere in the store
+      const sessionId = await getEid(version);
 
       if (!sessionId) {
         throw new Error("Cannot get Wialon session ID");
@@ -161,6 +170,9 @@ export const useFELiteStore = defineStore("felite", () => {
         getUnits(sessionId),
         getCustomers(sessionId),
       ]);
+
+      // Map หลังจากโหลดข้อมูลทั้งหมดเสร็จ
+      mergeData.value = mapData();
     } catch (err) {
       console.error("loadData error:", err);
       error.value = err.message || err;
@@ -169,11 +181,87 @@ export const useFELiteStore = defineStore("felite", () => {
     }
   }
 
+  // ==============================
+  // Map Units + Types + Customers
+  // ==============================
+  function mapData() {
+    if (!units.value.length) {
+      return [];
+    }
+
+    // สร้าง Map สำหรับ lookup
+    const typeMap = new Map(types.value.map((item) => [item.id, item]));
+
+    const customerMap = new Map(customers.value.map((item) => [item.id, item]));
+
+    return units.value.map((item, index) => {
+      let type = "";
+      let customer = "";
+      let pos = "";
+
+      // ==============================
+      // Equipment Type
+      // PHP: $type_->id == $item->hw
+      // ==============================
+      const typeData = typeMap.get(item.hw);
+
+      if (typeData) {
+        type = typeData.name || "";
+      }
+
+      // ==============================
+      // Customer
+      // PHP: $customer_->id == $item->bact
+      // ==============================
+      const customerData = customerMap.get(item.bact);
+
+      if (customerData) {
+        customer = customerData.nm || "";
+      }
+
+      // ==============================
+      // Last GPS Time
+      // PHP: $item->lmsg->t
+      // ==============================
+      const dateTimeString =
+        item.lmsg?.t != null ? formatDate(item.lmsg.t) : "";
+
+      // ==============================
+      // Last Position
+      // PHP: y + "," + x
+      // ==============================
+      if (item.lmsg?.pos?.x != null && item.lmsg?.pos?.y != null) {
+        pos = `${item.lmsg.pos.y},${item.lmsg.pos.x}`;
+      }
+
+      return {
+        no: 0,
+        customerName: customerData?.nm || "",
+        serialNo: "",
+        imeiNumber: "",
+        uniqueId: item.uid || "",
+        unitName: item.nm || "",
+        vehicleMake: "",
+        vehicleModel: "",
+        licensePlate: "",
+        equipmentType: typeData?.name || "",
+        phoneNumber: item.ph || "",
+        lastPosition: pos,
+        lastGpsTime: dateTimeString,
+      };
+    });
+  }
+
+  function formatDate(epoch) {
+    return dayjs.unix(epoch).format("MM-DD-YYYY HH:mm:ss");
+  }
+
   return {
     eid,
     units,
     types,
     customers,
+    mergeData,
     loading,
     error,
 
@@ -181,5 +269,6 @@ export const useFELiteStore = defineStore("felite", () => {
     getUnits,
     getCustomers,
     loadData,
+    mapData,
   };
 });
