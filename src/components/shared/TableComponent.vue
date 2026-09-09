@@ -25,13 +25,24 @@
       :headers="headers"
       :items="serverItems"
       :items-length="totalItems"
-      :loading="loading"
+      :loading="props.loading"
       loading-text="Loading... Please wait"
       :search="search"
       fixed-header
       fixed-footer
       @update:options="loadItems"
     >
+      <template #loading>
+        <div class="d-flex justify-center pa-6">
+          <Vue3Lottie
+            :animation-data="animationData"
+            :height="200"
+            :width="200"
+            loop
+            autoplay
+          />
+        </div>
+      </template>
       <template #no-data>
         <div class="no-data-container">
           <div style="display: flex; flex-direction: column; gap: 6px">
@@ -148,6 +159,7 @@ import dayjs from "dayjs";
 
 import DateTimeDisplay from "./DateTimeDisplay.vue";
 import noDataAnimation from "@/assets/animations/no-data.json";
+import animationData from "@/assets/animations/loading.json";
 
 import {
   formatDurationFromMinutes,
@@ -187,7 +199,6 @@ const selectedMonth = ref(new Date().getMonth() + 1);
 const selectedYear = ref(new Date().getFullYear());
 
 const serverItems = ref([]);
-const loading = ref(true);
 const dataIsLast7days = ref(false);
 const search = ref("");
 
@@ -248,7 +259,7 @@ const fetchTable = async ({ page, itemsPerPage, sortBy, items = [] }) => {
 
 // Main loader function
 const loadItems = async ({ page, itemsPerPage, sortBy }) => {
-  loading.value = true;
+  props.loading = true;
   currentPage.value = page;
 
   try {
@@ -276,7 +287,7 @@ const loadItems = async ({ page, itemsPerPage, sortBy }) => {
   } catch (err) {
     console.error("Error loading items:", err);
   } finally {
-    loading.value = false;
+    props.loading = false;
   }
 };
 

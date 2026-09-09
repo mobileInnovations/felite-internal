@@ -15,12 +15,12 @@ localStorage.setItem("LANG", lang); // Set default language if not present
 const labels = lang === "th" ? th : en;
 
 export const commonMenus = [
-  {
-    title: "FElite1.0",
-    icon: TooltipIcon,
-    to: "/FElite1.0",
-    permissions: ["Admin"],
-  },
+  // {
+  //   title: "FElite1.0",
+  //   icon: TooltipIcon,
+  //   to: "/FElite1.0",
+  //   permissions: ["Admin"],
+  // },
   {
     title: "FElite2.0",
     icon: TooltipIcon,

@@ -11,11 +11,11 @@ const MainRoutes = {
       path: "/",
       component: () => import("@/views/StarterPage.vue"),
     },
-    {
-      name: "FElite1.0",
-      path: "/FElite1.0",
-      component: () => import("@/views/FElite1.0.vue"),
-    },
+    // {
+    //   name: "FElite1.0",
+    //   path: "/FElite1.0",
+    //   component: () => import("@/views/FElite1.0.vue"),
+    // },
     {
       name: "FElite2.0",
       path: "/FElite2.0",
