@@ -68,7 +68,6 @@ export const useFELiteStore = defineStore("felite", () => {
         from: 0,
         to: 0,
       };
-
       const response = await fetchWrapper.get(
         `${apiBaseUrl}?svc=core/search_items&sid=${sessionId}&params=${encodeURIComponent(
           JSON.stringify(params),
@@ -102,7 +101,6 @@ export const useFELiteStore = defineStore("felite", () => {
         from: 0,
         to: 0,
       };
-
       const response = await fetchWrapper.get(
         `${apiBaseUrl}?svc=core/search_items&sid=${sessionId}&params=${encodeURIComponent(
           JSON.stringify(params),
@@ -234,16 +232,27 @@ export const useFELiteStore = defineStore("felite", () => {
         pos = `${item.lmsg.pos.y},${item.lmsg.pos.x}`;
       }
 
+      // ==============================
+      // Serial No.
+      // ==============================
+      const serialNo = Object.values(item.aflds || []).find(
+        (field) => field.n === "Serial No.",
+      )?.v;
+
+      // ==============================
+      // License Plate
+      // ==============================
+      const licensePlate = Object.values(item.aflds || []).find(
+        (field) => field.n === "License Plate",
+      )?.v;
+
       return {
         no: 0,
         customerName: customerData?.nm || "",
-        serialNo: "",
-        imeiNumber: "",
+        serialNo: serialNo || "",
         uniqueId: item.uid || "",
         unitName: item.nm || "",
-        vehicleMake: "",
-        vehicleModel: "",
-        licensePlate: "",
+        licensePlate: licensePlate || "",
         equipmentType: typeData?.name || "",
         phoneNumber: item.ph || "",
         lastPosition: pos,

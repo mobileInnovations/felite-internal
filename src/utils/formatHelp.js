@@ -20,7 +20,7 @@ dayjs.extend(customParseFormat);
 export function formatDateTime({ date, time }) {
   if (!date || date === null) {
     console.warn(
-      "⚠️ 'date' is required in the object you pass to formatDateTime()"
+      "⚠️ 'date' is required in the object you pass to formatDateTime()",
     );
     return "";
   }
@@ -199,10 +199,25 @@ export function formatDurationFromHours(hours) {
     if (years) parts.push(`${years} year${years > 1 ? "s" : ""}`);
     if (months) parts.push(`${months} month${months > 1 ? "s" : ""}`);
     if (days) parts.push(`${days} day${days > 1 ? "s" : ""}`);
-    if (hours)
-      parts.push(`${hours.toFixed(2)} hour${hours > 1 ? "s" : ""}`);
+    if (hours) parts.push(`${hours.toFixed(2)} hour${hours > 1 ? "s" : ""}`);
   }
 
   return parts.join(" ");
 }
 
+export function formatPhoneNumber(phone) {
+  if (!phone) return "";
+
+  const digits = String(phone).replace(/\D/g, "");
+
+  if (digits.startsWith("66") && digits.length === 11) {
+    const countryCode = digits.slice(0, 2);
+    const prefix = digits.slice(2, 4);
+    const middle = digits.slice(4, 7);
+    const last = digits.slice(7);
+
+    return `(+${countryCode}) ${prefix} ${middle} ${last}`;
+  }
+
+  return phone;
+}

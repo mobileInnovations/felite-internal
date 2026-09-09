@@ -5,12 +5,12 @@
     elevation="0"
   >
     <div class="d-flex align-center">
-      <v-icon icon="$calendar" size="12" class="me-1 text-primary" />
+      <v-icon icon="mdi-calendar" size="12" class="me-1 text-primary" />
       <h5>{{ dayjs(value).format("DD MMM YY") }}</h5>
     </div>
     <div v-if="showTime" class="d-flex align-center mt-1">
-      <v-icon icon="$clockOutline" size="12" class="me-1 text-primary" />
-      <span class="text-caption">{{ dayjs(value).format("HH:mm A") }}</span>
+      <v-icon icon="mdi-clock-outline" size="12" class="me-1 text-primary" />
+      <span class="text-caption">{{ dayjs(value).format("HH:mm:ss") }}</span>
     </div>
   </v-sheet>
   <span v-else class="text-medium-emphasis">Not available</span>
@@ -44,3 +44,11 @@ const showTime = computed(() => {
   return /\d{2}:\d{2}:\d{2}/.test(val);
 });
 </script>
+
+<style scoped>
+.text-caption{
+  font-size: 0.75rem;
+  display: flex;
+  line-height: 1rem;
+}
+</style>

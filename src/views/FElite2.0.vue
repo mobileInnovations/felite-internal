@@ -36,18 +36,20 @@ const breadcrumbs = shallowRef([
 
 const headers = ref([
   { title: "No", key: "no" },
-  { title: t("customer_name"), key: "customerName" },
-  { title: t("serial_no"), key: "serialNo" },
-  { title: t("imei_number"), key: "imeiNumber" },
-  { title: t("unique_id"), key: "uid" },
-  { title: t("unit_name"), key: "unitName" },
-  { title: t("vehicle_make"), key: "vehicleMake" },
-  { title: t("vehicle_model"), key: "vehicleModel" },
-  { title: t("license_plate"), key: "licensePlate" },
-  { title: t("equipment_type"), key: "equipmentType" },
-  { title: t("phone_number"), key: "phoneNumber" },
-  { title: t("last_position"), key: "lastPosition" },
-  { title: t("last_gps_time"), key: "lastGpsTime" },
+  { title: t("customer_name"), key: "customerName", minWidth: 200 },
+  { title: t("serial_no"), key: "serialNo", minWidth: 150 },
+  { title: t("unique_id"), key: "uniqueId", minWidth: 150 },
+  { title: t("unit_name"), key: "unitName", minWidth: 150 },
+  { title: t("license_plate"), key: "licensePlate", minWidth: 150 },
+  { title: t("equipment_type"), key: "equipmentType", minWidth: 150 },
+  { title: t("phone_number"), key: "phoneNumber", type: "phone", minWidth: 150 },
+  { title: t("last_position"), key: "lastPosition", minWidth: 150 },
+  {
+    title: t("last_gps_time"),
+    key: "lastGpsTime",
+    type: "date",
+    minWidth: 150,
+  },
 ]);
 
 onMounted(async () => {

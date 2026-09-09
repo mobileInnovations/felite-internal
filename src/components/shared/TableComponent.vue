@@ -75,6 +75,11 @@
           <v-btn density="compact" variant="text" icon="$circleEditOutline" />
         </template>
 
+        <!-- Phone Number -->
+        <template v-else-if="header.type === 'phone'">
+          {{ formatPhoneNumber(item[header.key]) }}
+        </template>
+
         <!-- Running Number -->
         <template v-else-if="header.key === 'no'">
           {{ (currentPage - 1) * itemsPerPage + index + 1 }}
@@ -91,7 +96,7 @@
           </div>
         </template>
 
-        <template v-else-if="isDateLike(item[header.key])">
+        <template v-else-if="header.type === 'date'">
           <DateTimeDisplay :value="item[header.key]" />
         </template>
 
@@ -147,6 +152,7 @@ import noDataAnimation from "@/assets/animations/no-data.json";
 import {
   formatDurationFromMinutes,
   formatDurationFromHours,
+  formatPhoneNumber,
 } from "@/utils/formatHelp.js";
 
 const props = defineProps({
