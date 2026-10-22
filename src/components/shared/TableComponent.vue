@@ -2,11 +2,8 @@
   <!-- 🔍 Date Filter Inputs -->
   <v-card elevation="0">
     <v-row class="search-box">
-      <v-col cols="12">
-        <h5>{{ $t("what_are_you_looking_for") }}</h5>
-      </v-col>
       <!-- Search bar -->
-      <v-col v-if="canSearch">
+      <v-col cols="12" v-if="canSearch">
         <v-text-field
           v-model="search"
           :label="$t('search')"
@@ -391,6 +388,7 @@ watch(
 .search-box {
   border-radius: 12px;
   background-color: white;
+  gap: 12px;
 }
 
 .no-data-container {

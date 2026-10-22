@@ -10,7 +10,7 @@ export default {
     const { t } = useI18n();
 
     const listItem = [
-      { title: t("edit_profile"), action: "edit-profile" },
+      // { title: t("edit_profile"), action: "edit-profile" },
       { title: t("logout"), action: "logout" },
     ];
 

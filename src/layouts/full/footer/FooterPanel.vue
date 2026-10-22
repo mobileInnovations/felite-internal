@@ -27,7 +27,7 @@ const projectName = import.meta.env.VITE_PROJECT_NAME;
       <v-chip label color="secondary" size="small" class="mx-1">
         v{{ version }}
       </v-chip>
-      <span class="text-caption text-medium-emphasis">
+      <span class="text-updated text-medium-emphasis mx-1">
         last updated: {{ dayjs(lastUpdated).format('YYYY-MM-DD') }}
       </span>
     </div>
@@ -60,6 +60,10 @@ const projectName = import.meta.env.VITE_PROJECT_NAME;
     &:hover {
       color: rgb(var(--v-theme-primary));
     }
+  }
+
+  .text-updated {
+    font-size: 0.6rem;
   }
 }
 </style>

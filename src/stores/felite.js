@@ -261,6 +261,75 @@ export const useFELiteStore = defineStore("felite", () => {
     });
   }
 
+  function exportToCSV() {
+    const data = mapData();
+
+    if (!data.length) {
+      return;
+    }
+
+    const headers = [
+      "No",
+      "Customer Name",
+      "Serial No",
+      "Unique ID",
+      "Unit Name",
+      "License Plate",
+      "Equipment Type",
+      "Phone Number",
+      "Last Position",
+      "Last GPS Time",
+    ];
+
+    const rows = data.map((item, index) => [
+      index + 1,
+      item.customerName,
+      item.serialNo,
+      item.uniqueId,
+      item.unitName,
+      item.licensePlate,
+      item.equipmentType,
+      item.phoneNumber,
+      item.lastPosition,
+      item.lastGpsTime,
+    ]);
+
+    downloadCSV(headers, rows);
+  }
+
+  function downloadCSV(headers, rows) {
+    const csvContent = [headers, ...rows]
+      .map((row) =>
+        row
+          .map((value) => {
+            const text = String(value ?? "");
+
+            // Escape double quote ตาม CSV standard
+            return `"${text.replace(/"/g, '""')}"`;
+          })
+          .join(","),
+      )
+      .join("\r\n");
+
+    // UTF-8 BOM สำหรับ Excel
+    const blob = new Blob(["\uFEFF" + csvContent], {
+      type: "text/csv;charset=utf-8;",
+    });
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = `FELite2_${dayjs().format("YYYY-MM-DD_HHmmss")}.csv`;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+  }
+
   function formatDate(epoch) {
     return dayjs.unix(epoch).format("MM-DD-YYYY HH:mm:ss");
   }
@@ -279,5 +348,6 @@ export const useFELiteStore = defineStore("felite", () => {
     getCustomers,
     loadData,
     mapData,
+    exportToCSV,
   };
 });

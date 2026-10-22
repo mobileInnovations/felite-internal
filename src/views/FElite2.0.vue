@@ -1,6 +1,12 @@
 <template>
   <BaseBreadcrumb :title="page.title" :breadcrumbs="breadcrumbs" />
   <v-card class="pa-9" elevation="0">
+    <div class="btn-export-csv">
+      <v-btn color="green" variant="flat" @click="store.exportToCSV()">
+        Export CSV
+      </v-btn>
+    </div>
+
     <TableComponent
       :headers="headers"
       :data="mergeData"
@@ -42,7 +48,12 @@ const headers = ref([
   { title: t("unit_name"), key: "unitName", minWidth: 150 },
   { title: t("license_plate"), key: "licensePlate", minWidth: 150 },
   { title: t("equipment_type"), key: "equipmentType", minWidth: 150 },
-  { title: t("phone_number"), key: "phoneNumber", type: "phone", minWidth: 150 },
+  {
+    title: t("phone_number"),
+    key: "phoneNumber",
+    type: "phone",
+    minWidth: 150,
+  },
   { title: t("last_position"), key: "lastPosition", minWidth: 150 },
   {
     title: t("last_gps_time"),
@@ -56,3 +67,11 @@ onMounted(async () => {
   await store.loadData(2);
 });
 </script>
+
+<style scoped>
+.btn-export-csv {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+</style>

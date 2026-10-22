@@ -139,7 +139,7 @@ export default defineComponent({
     <!-- Language -->
     <!-- ---------------------------------------------- -->
 
-    <v-menu transition="slide-y-transition">
+    <!-- <v-menu transition="slide-y-transition">
       <template v-slot:activator="{ props }">
         <v-btn size="small" icon rounded="sm" variant="text" v-bind="props">
           <svg-icon type="mdi" :path="mdiTranslateVariant" />
@@ -157,7 +157,7 @@ export default defineComponent({
           </v-list-item>
         </v-list>
       </v-sheet>
-    </v-menu>
+    </v-menu> -->
 
     <!-- ---------------------------------------------- -->
     <!-- User Profile -->
